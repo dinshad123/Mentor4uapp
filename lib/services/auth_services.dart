@@ -1,19 +1,20 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mentor4u_app/screens/home_screen.dart';
+import 'package:mentor4u_app/screens/role_selection_screen.dart';
 
 class AuthServices {
   final firebaseauth = FirebaseAuth.instance;
   User? get currentUser => firebaseauth.currentUser;
 
-  Future<void> createUserWithEmailAndPassword(
+  Future<UserCredential?> createUserWithEmailAndPassword(
     String email,
     String password,
     BuildContext context,
   ) async {
     try {
-      await firebaseauth.createUserWithEmailAndPassword(
-          email: email, password: password);
+      UserCredential userCredential = await firebaseauth
+          .createUserWithEmailAndPassword(email: email, password: password);
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -21,6 +22,7 @@ class AuthServices {
           ),
         );
       }
+      return userCredential;
     } on FirebaseAuthException catch (e) {
       String errorMessage = 'Error creating user:$e';
       if (context.mounted) {
@@ -52,9 +54,9 @@ class AuthServices {
           email: email, password: password);
       if (userCredential.user != null) {
         if (context.mounted) {
-          Navigator.of(context).push(
+          Navigator.of(context).pushReplacement(
             MaterialPageRoute(
-              builder: (context) => const HomeScreen(),
+              builder: (context) => const RoleSelectionScreen(),
             ),
           );
         }

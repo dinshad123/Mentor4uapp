@@ -1,8 +1,5 @@
-import 'dart:math';
-
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mentor4u_app/assets.dart';
 import 'package:mentor4u_app/services/auth_services.dart';
 
@@ -37,6 +34,7 @@ class _AuthScreenState extends State<AuthScreen> {
     await Future.delayed(
       const Duration(seconds: 2),
     );
+
     setState(() {
       _isLogin = true;
     });
@@ -150,18 +148,20 @@ class _AuthScreenState extends State<AuthScreen> {
                                         if (!_isLogin) {
                                           AuthServices _authServices =
                                               AuthServices();
-                                          _authServices
-                                              .createUserWithEmailAndPassword(
+                                          UserCredential? user =
+                                              await _authServices
+                                                  .createUserWithEmailAndPassword(
                                             _emailController.text,
                                             _passwordController.text,
                                             context,
                                           );
-
-                                          toLoginForm();
+                                          if (user != null) {
+                                            toLoginForm();
+                                          }
                                         } else {
                                           AuthServices _authServices =
                                               AuthServices();
-                                          _authServices.loginUser(
+                                          await _authServices.loginUser(
                                               _emailController.text,
                                               _passwordController.text,
                                               context);
