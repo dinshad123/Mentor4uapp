@@ -1,26 +1,32 @@
+enum RoleSelection { mentor, mentee }
+
 class UserModel {
   final String? id;
-  final String email;
-  final String password;
+  final String? name;
+  RoleSelection? role = null;
 
   UserModel({
     this.id,
-    required this.email,
-    required this.password,
+    this.name,
+    this.role,
   });
+
 // json to Usermodel
-  factory UserModel.fromJson(Map<String, dynamic> json) {
+  factory UserModel.fromMap(Map<String, dynamic> json) {
     return UserModel(
-        id: json['id'], email: json['email'], password: json['password']);
+      id: json['id'],
+      name: json['name'],
+      role: json['role'],
+    );
   }
 
   // usermodel to map
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'email': email,
-      'password': password,
+      'name': name,
+      'role': role.toString().split('.').last,
     };
   }
 }

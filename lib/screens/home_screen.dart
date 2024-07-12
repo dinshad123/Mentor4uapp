@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mentor4u_app/screens/role_selection_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,8 +11,16 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
+      body: Center(
+        child: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const RoleSelectionScreen()));
+            },
+            child: Text('hai')),
+      ),
     );
   }
 }

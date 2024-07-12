@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mentor4u_app/assets.dart';
-import 'package:mentor4u_app/providers/role_provider.dart';
+import 'package:mentor4u_app/models/user_model.dart';
+import 'package:mentor4u_app/provider/role_provider.dart';
+import 'package:mentor4u_app/screens/field_selection_screen.dart';
 import 'package:provider/provider.dart';
 
 // enum RoleSelection { mentor, mentee }
@@ -60,7 +62,7 @@ class RoleSelectionScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           onChanged: (RoleSelection? value) {
-                            roleProvider.selectRole(value);
+                            roleProvider.selectRole(value!);
                           },
                         ),
                         RadioListTile(
@@ -75,7 +77,7 @@ class RoleSelectionScreen extends StatelessWidget {
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
                           onChanged: (RoleSelection? value) {
-                            roleProvider.selectRole(value);
+                            roleProvider.selectRole(value!);
                           },
                         ),
                       ],
@@ -101,8 +103,20 @@ class RoleSelectionScreen extends StatelessWidget {
                               )),
                           onPressed: () {
                             roleProvider.toggleRadioButtons();
+                            RoleSelection? role = roleProvider.selectedRole;
+                            if (roleProvider.selectedRole != null) {
+                              roleProvider.saveRole();
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const FieldSelectionScreen(),
+                                ),
+                              );
+                            }
                           },
-                          child: const Text("Let's get Started"),
+                          child: Text(roleProvider.showradioButton
+                              ? "Next"
+                              : "Let's get Started"),
                         ),
                       );
                     }),
