@@ -2,8 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentor4u_app/firebase_options.dart';
-import 'package:mentor4u_app/provider/role_provider.dart';
-import 'package:mentor4u_app/screens/role_selection_screen.dart';
+import 'package:mentor4u_app/provider/user_provider.dart';
+import 'package:mentor4u_app/router/router_handling.dart';
 import 'package:mentor4u_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -15,7 +15,7 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => RoleProvider(),
+      create: (context) => UserProvider(),
       child: const MyApp(),
     ),
   );
@@ -65,6 +65,7 @@ class MyApp extends StatelessWidget {
         ),
         textTheme: textTheme,
       ),
+      onGenerateRoute: generateRoute,
       home: const SplashScreen(),
     );
   }

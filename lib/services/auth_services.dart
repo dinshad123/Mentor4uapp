@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mentor4u_app/provider/role_provider.dart';
+import 'package:mentor4u_app/provider/user_provider.dart';
 
 import 'package:mentor4u_app/screens/role_selection_screen.dart';
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class AuthServices {
           email: email, password: password);
       final user = userCredential.user;
       if (context.mounted) {
-        final roleProvider = Provider.of<RoleProvider>(context, listen: false);
+        final roleProvider = Provider.of<UserProvider>(context, listen: false);
         if (user != null) {
           roleProvider.setUserId(user.uid);
         }
@@ -65,11 +65,7 @@ class AuthServices {
 
       if (userCredential.user != null) {
         if (context.mounted) {
-          Navigator.of(context).pushReplacement(
-            MaterialPageRoute(
-              builder: (context) => const RoleSelectionScreen(),
-            ),
-          );
+          Navigator.pushNamed(context, RoleSelectionScreen.routeName);
         }
       }
     } on FirebaseAuthException catch (e) {

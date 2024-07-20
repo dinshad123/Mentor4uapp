@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:mentor4u_app/assets.dart';
-import 'package:mentor4u_app/models/user_model.dart';
-import 'package:mentor4u_app/provider/role_provider.dart';
+import 'package:mentor4u_app/provider/user_provider.dart';
 import 'package:mentor4u_app/screens/field_selection_screen.dart';
 import 'package:provider/provider.dart';
 
-// enum RoleSelection { mentor, mentee }
+enum RoleSelection { mentor, mentee }
 
-class RoleSelectionScreen extends StatelessWidget {
+class RoleSelectionScreen extends StatefulWidget {
+  static const String routeName = '/roleselection-screen';
   const RoleSelectionScreen({super.key});
 
-  // RoleSelection? _roleSelectionItems = RoleSelection.mentor;
+  @override
+  State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
+}
+
+class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
+  bool toggleSelection = false;
+  RoleSelection? roleSelected = null;
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +29,11 @@ class RoleSelectionScreen extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: horizontalPadding,
-              vertical: verticalPadding,
-            ),
-            child:
-                Consumer<RoleProvider>(builder: (context, roleProvider, child) {
-              return Column(
+              padding: EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: verticalPadding,
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -47,12 +51,12 @@ class RoleSelectionScreen extends StatelessWidget {
                     'Set your goal ! \nBe ready to be guided..... ',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
-                  if (roleProvider.showradioButton)
+                  if (toggleSelection == true)
                     Column(
                       children: [
                         RadioListTile(
                           value: RoleSelection.mentor,
-                          groupValue: roleProvider.selectedRole,
+                          groupValue: roleSelected,
                           title: Text(
                             'Mentor',
                             style: Theme.of(context).textTheme.headlineMedium,
@@ -61,13 +65,15 @@ class RoleSelectionScreen extends StatelessWidget {
                             'A guide who leads you to your goals',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          onChanged: (RoleSelection? value) {
-                            roleProvider.selectRole(value!);
+                          onChanged: (RoleSelection) {
+                            setState(() {
+                              roleSelected = RoleSelection;
+                            });
                           },
                         ),
                         RadioListTile(
                           value: RoleSelection.mentee,
-                          groupValue: roleProvider.selectedRole,
+                          groupValue: roleSelected,
                           title: Text(
                             'Mentee',
                             style: Theme.of(context).textTheme.headlineMedium,
@@ -76,20 +82,22 @@ class RoleSelectionScreen extends StatelessWidget {
                             'A guide who leads you to your goals',
                             style: Theme.of(context).textTheme.headlineSmall,
                           ),
-                          onChanged: (RoleSelection? value) {
-                            roleProvider.selectRole(value!);
+                          onChanged: (value) {
+                            setState(() {
+                              roleSelected = value;
+                            });
                           },
                         ),
                       ],
                     ),
-                  // SizedBox(
-                  //   height: MediaQuery.of(context).size.height * 0.5,
-                  // ),
-
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height *
+                        (toggleSelection == true ? 0.2 : 0.5),
+                  ),
                   Padding(
                     padding: EdgeInsets.only(
                         bottom: MediaQuery.of(context).size.height * 0.001),
-                    child: Consumer<RoleProvider>(
+                    child: Consumer<UserProvider>(
                         builder: (context, roleProvider, child) {
                       return Center(
                         child: OutlinedButton(
@@ -102,19 +110,15 @@ class RoleSelectionScreen extends StatelessWidget {
                                 ),
                               )),
                           onPressed: () {
-                            roleProvider.toggleRadioButtons();
-                            RoleSelection? role = roleProvider.selectedRole;
-                            if (roleProvider.selectedRole != null) {
-                              roleProvider.saveRole();
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const FieldSelectionScreen(),
-                                ),
-                              );
+                            toggleButton();
+                            if (roleSelected != null) {
+                              Navigator.pushNamed(
+                                  context, FieldSelectionScreen.routeName,
+                                  arguments:
+                                      roleSelected.toString().split('.').last);
                             }
                           },
-                          child: Text(roleProvider.showradioButton
+                          child: Text(toggleSelection == true
                               ? "Next"
                               : "Let's get Started"),
                         ),
@@ -122,11 +126,15 @@ class RoleSelectionScreen extends StatelessWidget {
                     }),
                   ),
                 ],
-              );
-            }),
-          ),
+              )),
         ),
       ),
     );
+  }
+
+  void toggleButton() {
+    setState(() {
+      toggleSelection = true;
+    });
   }
 }

@@ -4,6 +4,7 @@ import 'package:mentor4u_app/assets.dart';
 import 'package:mentor4u_app/services/auth_services.dart';
 
 class AuthScreen extends StatefulWidget {
+  static const String routeName = 'auth/screen';
   const AuthScreen({super.key});
 
   @override
@@ -166,7 +167,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                               _emailController.text,
                                               _passwordController.text,
                                               context);
-                                          print('hai');
                                         }
                                       },
                                       child: Text(
