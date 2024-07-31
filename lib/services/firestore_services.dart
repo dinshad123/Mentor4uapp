@@ -21,14 +21,5 @@ class FirestoreServices {
     }
   }
 
-  Future<void> updateUserData(dynamic user) async {
-    try {
-      await _db.collection('user').doc(user.id).update(user.toMap());
-    } catch (e) {
-      Fluttertoast.showToast(
-        msg: e.toString(),
-        backgroundColor: Colors.green,
-      );
-    }
-  }
+  fetchData(String fieldName) {}
 }

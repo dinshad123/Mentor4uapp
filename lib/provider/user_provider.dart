@@ -32,7 +32,7 @@ class UserProvider extends ChangeNotifier {
         role: role,
         id: userId,
       );
-      _firestoreServices.saveUserData(mentorModel);
+      await _firestoreServices.saveUserData(mentorModel);
     } else {
       MenteeModel menteeModel = MenteeModel(
         field: field,
@@ -40,7 +40,7 @@ class UserProvider extends ChangeNotifier {
         role: role,
         id: userId,
       );
-      _firestoreServices.saveUserData(menteeModel);
+      await _firestoreServices.saveUserData(menteeModel);
     }
   }
 

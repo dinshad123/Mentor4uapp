@@ -160,7 +160,6 @@ class _AuthScreenState extends State<AuthScreen> {
                                             toLoginForm();
                                           }
                                         } else {
-                                          print('hello dinshad');
                                           AuthServices _authServices =
                                               AuthServices();
                                           await _authServices.loginUser(

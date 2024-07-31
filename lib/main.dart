@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mentor4u_app/firebase_options.dart';
 import 'package:mentor4u_app/provider/user_provider.dart';
 import 'package:mentor4u_app/router/router_handling.dart';
-import 'package:mentor4u_app/screens/splash_screen.dart';
+import 'package:mentor4u_app/screens/field_selection_screen.dart';
+import 'package:mentor4u_app/widgets/bottom_bar.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -66,7 +67,9 @@ class MyApp extends StatelessWidget {
         textTheme: textTheme,
       ),
       onGenerateRoute: generateRoute,
-      home: const SplashScreen(),
+      home: FieldSelectionScreen(
+        role: 'mentee',
+      ),
     );
   }
 }

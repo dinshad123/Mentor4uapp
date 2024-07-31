@@ -1,3 +1,5 @@
+import 'dart:io';
+
 enum RoleSelection { mentor, mentee }
 
 class MentorModel {
@@ -5,12 +7,14 @@ class MentorModel {
   final String? name;
   final String? field;
   final String? role;
+  final File? image;
 
   MentorModel({
     this.id,
     this.name,
     this.role,
     this.field,
+    this.image,
   });
 
 // json to Usermodel
@@ -20,6 +24,7 @@ class MentorModel {
       name: json['name'],
       field: json['field'],
       role: json['role'],
+      image: json['imageUrl'],
     );
   }
 
@@ -31,6 +36,7 @@ class MentorModel {
       'field': field,
       'name': name,
       'role': role,
+      'imageUrl': image,
     };
   }
 }

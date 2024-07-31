@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:mentor4u_app/assets.dart';
 import 'package:mentor4u_app/models/mentee_model.dart';
 import 'package:mentor4u_app/models/mentor_model.dart';
@@ -30,12 +33,28 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
   ];
 
   final TextEditingController _nameController = TextEditingController();
+  XFile? _image;
+  void imagePicking({required bool isCameraSelected}) async {
+    try {
+      final ImagePicker picker = ImagePicker();
+      final XFile? result = await picker.pickImage(
+        source: isCameraSelected ? ImageSource.camera : ImageSource.gallery,
+      );
+      if (result != null) {
+        setState(() {
+          _image = result;
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     double horizontalPadding = screenSize.width * 0.05;
-    double verticalPadding = screenSize.height * 0.10;
+    double verticalPadding = screenSize.height * 0.05;
     double logoHeight = screenSize.height * 0.10;
 
     return Scaffold(
@@ -51,7 +70,6 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                 Consumer<UserProvider>(builder: (context, roleProvider, child) {
               return Column(
                 mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Image.asset(
@@ -69,54 +87,95 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   Container(
-                    margin: EdgeInsets.only(
-                        top: MediaQuery.of(context).size.height * 0.03),
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            spreadRadius: 1,
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                    height: 150,
+                    width: double.infinity,
+                    child: Row(
+                      children: [
+                        Container(
+                            height: 120,
+                            width: 120,
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.green),
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: _image == null
+                                  ? TextButton(
+                                      child: const Text('Upload\nImage'),
+                                      onPressed: () {
+                                        imagePicking(isCameraSelected: false);
+                                      },
+                                    )
+                                  : Image.file(
+                                      File(_image!.path),
+                                      fit: BoxFit.cover,
+                                    ),
+                            )),
+                        const Padding(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              ' Capture your image',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 17),
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              imagePicking(isCameraSelected: true);
+                            },
+                            icon: const Icon(Icons.camera_enhance_rounded))
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Material(
+                    elevation: 5,
+                    color: const Color.fromARGB(255, 176, 202, 177),
+                    borderRadius: BorderRadius.circular(25),
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.03),
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        color: const Color.fromARGB(255, 206, 231, 207)),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 40),
-                      child: Column(
-                        children: [
-                          TextField(
-                            controller: _nameController,
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
-                              icon: const Icon(Icons.person),
-                              hintText: 'Enter Your Name',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        child: Column(
+                          children: [
+                            TextField(
+                              controller: _nameController,
+                              keyboardType: TextInputType.name,
+                              decoration: InputDecoration(
+                                icon: const Icon(Icons.person),
+                                hintText: 'Enter Your Name',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(25),
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.050,
-                          ),
-                          DropdownButton(
-                            value: dropDownValue,
-                            icon: const Icon(Icons.arrow_drop_down_circle),
-                            hint: const Text('Select your field'),
-                            items: dropDownMenu.map((String field) {
-                              return DropdownMenuItem<String>(
-                                  value: field, child: Text(field));
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropDownValue = newValue;
-                              });
-                            },
-                          ),
-                        ],
+                            SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.050,
+                            ),
+                            DropdownButton(
+                              value: dropDownValue,
+                              icon: const Icon(Icons.arrow_drop_down_circle),
+                              hint: const Text('Select your field'),
+                              items: dropDownMenu.map((String field) {
+                                return DropdownMenuItem<String>(
+                                    value: field, child: Text(field));
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                setState(() {
+                                  dropDownValue = newValue;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -143,6 +202,7 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                             _nameController.text,
                             widget.role,
                             dropDownValue!,
+                            File(_image!.path),
                           );
                         },
                         child: const Text("Submit"),
