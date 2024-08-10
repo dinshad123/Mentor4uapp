@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mentor4u_app/assets.dart';
 import 'package:mentor4u_app/screens/home_screen.dart';
 import 'package:mentor4u_app/screens/message_screen.dart';
 import 'package:mentor4u_app/screens/profile_screen.dart';
 import 'package:mentor4u_app/screens/search_screen.dart';
 
 class BottomBar extends StatefulWidget {
+  static const String routeName = '/bottomBar';
   const BottomBar({super.key});
 
   @override
@@ -31,9 +33,7 @@ class _BottomBarState extends State<BottomBar> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: const Icon(
-          Icons.add,
-        ),
+        child: const ImageIcon(AssetImage(chatGptLogo)),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _pagesIndex,

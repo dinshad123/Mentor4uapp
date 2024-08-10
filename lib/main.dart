@@ -2,10 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mentor4u_app/firebase_options.dart';
+import 'package:mentor4u_app/provider/home_screen_view_model.dart';
 import 'package:mentor4u_app/provider/user_provider.dart';
 import 'package:mentor4u_app/router/router_handling.dart';
-import 'package:mentor4u_app/screens/field_selection_screen.dart';
-import 'package:mentor4u_app/widgets/bottom_bar.dart';
+import 'package:mentor4u_app/screens/splash_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -14,12 +14,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => UserProvider(),
-      child: const MyApp(),
-    ),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (context) => UserProvider(),
+      ),
+      ChangeNotifierProvider(create: (context) => HomeScreenViewModel()),
+    ],
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -56,20 +59,17 @@ class MyApp extends StatelessWidget {
         ));
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MENTOR4U',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromRGBO(94, 188, 103, 1.0),
-          brightness: Brightness.light,
+        debugShowCheckedModeBanner: false,
+        title: 'MENTOR4U',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromRGBO(94, 188, 103, 1.0),
+            brightness: Brightness.light,
+          ),
+          textTheme: textTheme,
         ),
-        textTheme: textTheme,
-      ),
-      onGenerateRoute: generateRoute,
-      home: FieldSelectionScreen(
-        role: 'mentee',
-      ),
-    );
+        onGenerateRoute: generateRoute,
+        home: const SplashScreen());
   }
 }

@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mentor4u_app/assets.dart';
-import 'package:mentor4u_app/models/mentee_model.dart';
-import 'package:mentor4u_app/models/mentor_model.dart';
+
 import 'package:mentor4u_app/provider/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class FieldSelectionScreen extends StatefulWidget {
-  String role;
+  final String role;
   static const routeName = '/field-selection-screen';
 
-  FieldSelectionScreen({
+  const FieldSelectionScreen({
     super.key,
     required this.role,
   });
@@ -131,8 +130,8 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                     height: 10,
                   ),
                   Material(
-                    elevation: 5,
-                    color: const Color.fromARGB(255, 176, 202, 177),
+                    elevation: 8,
+                    color: Color.fromARGB(255, 176, 246, 178),
                     borderRadius: BorderRadius.circular(25),
                     child: Container(
                       margin: EdgeInsets.only(
@@ -142,37 +141,52 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 40),
+                        padding: const EdgeInsets.only(left: 25, right: 4),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
+                            const Text(
+                              'Full Name',
+                              style: TextStyle(fontSize: 20),
+                            ),
                             TextField(
                               controller: _nameController,
                               keyboardType: TextInputType.name,
-                              decoration: InputDecoration(
-                                icon: const Icon(Icons.person),
-                                hintText: 'Enter Your Name',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(25),
-                                ),
-                              ),
                             ),
                             SizedBox(
                               height:
                                   MediaQuery.of(context).size.height * 0.050,
                             ),
-                            DropdownButton(
-                              value: dropDownValue,
-                              icon: const Icon(Icons.arrow_drop_down_circle),
-                              hint: const Text('Select your field'),
-                              items: dropDownMenu.map((String field) {
-                                return DropdownMenuItem<String>(
-                                    value: field, child: Text(field));
-                              }).toList(),
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  dropDownValue = newValue;
-                                });
-                              },
+                            const Text(
+                              'Select your Field',
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            SizedBox(
+                              width: double.infinity,
+                              child: DropdownButton(
+                                value: dropDownValue,
+                                icon: Container(
+                                    margin: EdgeInsets.only(
+                                      left: MediaQuery.of(context).size.width *
+                                          0.35,
+                                    ),
+                                    child: const Icon(
+                                        Icons.arrow_drop_down_circle_outlined)),
+                                hint: const Text(
+                                  'Nothing selected',
+                                  style: TextStyle(color: Colors.green),
+                                ),
+                                items: dropDownMenu.map((String field) {
+                                  return DropdownMenuItem<String>(
+                                      value: field, child: Text(field));
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropDownValue = newValue;
+                                  });
+                                },
+                              ),
                             ),
                           ],
                         ),
@@ -203,12 +217,23 @@ class _FieldSelectionScreenState extends State<FieldSelectionScreen> {
                             widget.role,
                             dropDownValue!,
                             File(_image!.path),
+                            context,
                           );
                         },
                         child: const Text("Submit"),
                       ),
                     ),
                   ),
+                  Consumer<UserProvider>(
+                      builder: (context, useprovider, child) {
+                    final provider =
+                        Provider.of<UserProvider>(context, listen: false);
+                    if (provider.isDataSaved! && provider.isDataSaved != null) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  }),
                 ],
               );
             }),

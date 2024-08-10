@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mentor4u_app/models/mentor_model.dart';
 
 class MentorBuilderView extends StatefulWidget {
-  const MentorBuilderView({super.key});
+  final List<MentorModel> mentors;
+  const MentorBuilderView({super.key, required this.mentors});
 
   @override
   State<MentorBuilderView> createState() => _MentorBuilderViewState();

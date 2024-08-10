@@ -7,7 +7,7 @@ class MentorModel {
   final String? name;
   final String? field;
   final String? role;
-  final File? image;
+  final String? image;
 
   MentorModel({
     this.id,

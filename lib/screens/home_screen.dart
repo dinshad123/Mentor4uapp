@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:mentor4u_app/assets.dart';
+import 'package:mentor4u_app/models/mentor_model.dart';
+import 'package:mentor4u_app/provider/home_screen_view_model.dart';
+import 'package:mentor4u_app/widgets/ai_companion_view.dart';
 import 'package:mentor4u_app/widgets/home_screen_field_container.dart';
 import 'package:mentor4u_app/widgets/mentor_builder_view.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/homeScreen';
-  HomeScreen({super.key});
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
     'Writing',
     'Health & Wellness'
   ];
-
+  String fieldName = 'Data & Analytics';
   bool _isExpanded = false;
   void showAllFields() {
     setState(() {
@@ -36,11 +40,26 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void fetchMentorData() async {
+    final provider = Provider.of<HomeScreenViewModel>(context, listen: false);
+    await provider.fetchMentorsByField(fieldName);
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      fetchMentorData();
+    });
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).primaryColor,
         title: Row(
           children: [
@@ -65,18 +84,24 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: [],
       ),
       body: Column(children: [
-        Container(
-          color: Theme.of(context).primaryColor,
-          child: SizedBox(
-            height: 200,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(6),
-              scrollDirection: Axis.horizontal,
-              itemCount: 10,
-              itemBuilder: (context, index) => const MentorBuilderView(),
+        Consumer<HomeScreenViewModel>(builder: (context, value, child) {
+          return Container(
+            color: Theme.of(context).primaryColor,
+            child: SizedBox(
+              height: 200,
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(6),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: value.mentors.length,
+                  itemBuilder: (context, index) {
+                    final mentors = value.mentors;
+                    return MentorBuilderView(
+                      mentors: mentors,
+                    );
+                  }),
             ),
-          ),
-        ),
+          );
+        }),
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
@@ -89,48 +114,60 @@ class _HomeScreenState extends State<HomeScreen> {
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(30), topRight: Radius.circular(30)),
               child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 15, top: 5),
-                      child: Text(
-                        'Select Interested Field',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15, top: 5),
+                        child: Text(
+                          'Select Interested Field',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      child: GridView.builder(
-                          itemCount: _isExpanded ? dropDownMenu.length : 4,
-                          padding: const EdgeInsets.all(10),
-                          gridDelegate:
-                              const SliverGridDelegateWithMaxCrossAxisExtent(
-                                  maxCrossAxisExtent: 250,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                  childAspectRatio: 3),
-                          itemBuilder: (context, index) {
-                            return Material(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(28)),
-                              color: Colors.blue[100],
-                              child: HomeScreenFieldContainer(
-                                gridViewContainerFunction: (index) {},
-                                gridViewText: dropDownMenu[index],
-                              ),
-                            );
-                          }),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        showAllFields();
-                      },
-                      child: Text(_isExpanded ? 'View less' : 'View more'),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 200,
+                        child: GridView.builder(
+                            itemCount: _isExpanded ? dropDownMenu.length : 4,
+                            padding: const EdgeInsets.all(10),
+                            gridDelegate:
+                                const SliverGridDelegateWithMaxCrossAxisExtent(
+                                    maxCrossAxisExtent: 250,
+                                    crossAxisSpacing: 10,
+                                    mainAxisSpacing: 10,
+                                    childAspectRatio: 3),
+                            itemBuilder: (context, index) {
+                              return Material(
+                                elevation: 5,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28)),
+                                color: Colors.blue[100],
+                                child: HomeScreenFieldContainer(
+                                  gridViewContainerFunction: (index) {},
+                                  gridViewText: dropDownMenu[index],
+                                ),
+                              );
+                            }),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          showAllFields();
+                        },
+                        child: Text(_isExpanded ? 'View less' : 'View more'),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.only(left: 15, top: 5),
+                        child: Text(
+                          'Your AI Companionsa',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 20),
+                        ),
+                      ),
+                      AiCompanionView(),
+                    ],
+                  ),
                 ),
               ),
             ),

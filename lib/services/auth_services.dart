@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mentor4u_app/provider/user_provider.dart';
 
 import 'package:mentor4u_app/screens/role_selection_screen.dart';
@@ -70,11 +71,7 @@ class AuthServices {
       }
     } on FirebaseAuthException catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-          ),
-        );
+        Fluttertoast.showToast(msg: '$e');
       }
     }
   }

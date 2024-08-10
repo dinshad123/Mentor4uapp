@@ -3,6 +3,7 @@ import 'package:mentor4u_app/screens/auth_screen.dart';
 import 'package:mentor4u_app/screens/field_selection_screen.dart';
 import 'package:mentor4u_app/screens/home_screen.dart';
 import 'package:mentor4u_app/screens/role_selection_screen.dart';
+import 'package:mentor4u_app/widgets/bottom_bar.dart';
 
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
@@ -25,9 +26,9 @@ Route<dynamic> generateRoute(RouteSettings settings) {
           role: role,
         ),
       );
-    case HomeScreen.routeName:
+    case BottomBar.routeName:
       return MaterialPageRoute(
-        builder: (_) => HomeScreen(),
+        builder: (_) => const BottomBar(),
       );
     default:
       return MaterialPageRoute(

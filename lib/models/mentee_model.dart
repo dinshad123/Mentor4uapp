@@ -7,7 +7,7 @@ class MenteeModel {
   final String? name;
   final String? field;
   final String? role;
-  final File? image;
+  final String? image;
 
   MenteeModel({
     this.id,

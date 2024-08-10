@@ -21,6 +21,7 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   void dispose() {
     super.dispose();
+
     _emailController.dispose();
     _passwordController.dispose();
   }
@@ -56,17 +57,17 @@ class _AuthScreenState extends State<AuthScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
+                    height: MediaQuery.of(context).size.height * 0.0,
                   ),
                   Image.asset(
                     logo,
-                    width: MediaQuery.of(context).size.width * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.9,
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.04,
+                    height: MediaQuery.of(context).size.height * 0.00,
                   ),
                   Padding(
-                      padding: const EdgeInsets.all(30),
+                      padding: const EdgeInsets.only(left: 30, right: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
